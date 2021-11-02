@@ -1,13 +1,15 @@
 #Python
+from os import stat
 from typing import Optional
 from enum import Enum
 
 #Pydantic 
 from pydantic import BaseModel
-from pydantic import Field, HttpUrl
+from pydantic import Field
 
 #FastAPI
 from fastapi import FastAPI
+from fastapi import status 
 from fastapi import Body, Query, Path
 
 app = FastAPI()
@@ -29,11 +31,13 @@ class State(Enum):
 
 class Location(BaseModel):
     city: str = Field(
-        ... 
+        ...,
+        example="Bogotá" 
         )
     state: Optional[State] = Field(default=None)
     country: str = Field(
-        ...
+        ...,
+        example="Colombia"
         ) 
 
 class PersonBase(BaseModel):
@@ -53,19 +57,15 @@ class PersonBase(BaseModel):
         ...,
         gt=0,
         le=115,
-        example="29"
-        )
-    website_Url : Optional[HttpUrl] = Field(
-        default=None,
-        example="www.cesar.com"
+        example=29
         )
     hair_color: Optional[HairColor] = Field(
         default=None,
-        example="black"
+        example=HairColor.black
         )
     is_married: Optional[bool] = Field(
         default=None,
-        example="False"
+        example=False
         )
 
 class Person(PersonBase):
@@ -75,36 +75,32 @@ class Person(PersonBase):
         example="1234esdr"
         )
 
-    class Config:
-        schema_extra ={
-            "example":{
-                "first_name": "Steffy",
-                "last_name": "Perilla",
-                "age": "27",
-                "email": "steffy@gmail.com",
-                "website_Url" : "www.steffy.com",
-                "hair_color" : "blonde",
-                "is_married" : "True",
-                "password" : "1234qwer"
-            }
-        }
-
 class PersonOut(PersonBase):
     pass
 
-@app.get("/")
+@app.get(
+    path="/",
+    status_code=status.HTTP_200_OK
+    )
 def home():
     return {"Hello":"World"}
 
 # Request and response Body
 
-@app.post("/person/new", response_model=PersonOut)
+@app.post(
+    path="/person/new", 
+    response_model=PersonOut,
+    status_code=status.HTTP_201_CREATED
+    )
 def create_person(person: Person = Body(...)):
     return person
 
 #Validaciones: Query Parameters
 
-@app.get("/person/detail")
+@app.get(
+    path="/person/detail",
+    status_code=status.HTTP_200_OK
+    )
 def show_person(
     name: Optional[str] = Query(
         None,
@@ -149,8 +145,9 @@ def update_person(
         example=123
     ),
     person: Person= Body(...),
-    location: Location = Body(...) 
+    # location: Location = Body(...) 
 ):
-    results = person.dict() 
-    results.update(location.dict())
-    return results 
+    # results = person.dict() 
+    # results.update(location.dict())
+    # return results
+    return person 
