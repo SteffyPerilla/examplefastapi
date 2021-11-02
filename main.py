@@ -42,22 +42,50 @@ class Person(BaseModel):
     first_name: str = Field(
         ...,
         min_length=1,
-        max_length=50
+        max_length=50,
+        example="Cesar"
     )   
     last_name: str = Field(
         ...,
         min_length=1,
-        max_length=50
+        max_length=50,
+        example="Galindo"
     )
     age: int = Field(
         ...,
         gt=0,
-        le=115
+        le=115,
+        example="29"
     )
-    email : EmailStr = Field(...)
-    website_Url : Optional[HttpUrl] = Field(default=None)
-    hair_color: Optional[HairColor] = Field(default=None)
-    is_married: Optional[bool] = Field(default=None)
+    email : EmailStr = Field(
+        ...,
+        example="cesar@gmail.com"
+        )
+    website_Url : Optional[HttpUrl] = Field(
+        default=None,
+        example="www.cesar.com"
+        )
+    hair_color: Optional[HairColor] = Field(
+        default=None,
+        example="black"
+        )
+    is_married: Optional[bool] = Field(
+        default=None,
+        example="False"
+        )
+
+    class Config:
+        schema_extra ={
+            "example":{
+                "first_name": "Steffy",
+                "last_name": "Perilla",
+                "age": "27",
+                "email": "steffy@gmail.com",
+                "website_Url" : "www.steffy.com",
+                "hair_color" : "blonde",
+                "is_married" : "True"
+            }
+        }
 
 @app.get("/")
 def home():
