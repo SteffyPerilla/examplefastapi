@@ -1,10 +1,11 @@
 #Python
+from _typeshed import SupportsRDivMod
 from typing import Optional, get_type_hints
 from enum import Enum
 
 #Pydantic 
 from pydantic import BaseModel
-from pydantic import Field 
+from pydantic import Field, EmailStr, HttpUrl
 
 #FastAPI
 from fastapi import FastAPI
@@ -22,12 +23,20 @@ class HairColor(Enum):
     blonde = "blonde"
     red = "red"
 
-
+class State(Enum):
+    Sur = "Sur"
+    Este = "Este"
+    Oeste = "Oeste"
+    Norte = "Norte"
 
 class Location(BaseModel):
-    city: str
-    state: str
-    country: str 
+    city: str = Field(
+        ... 
+    )
+    state: Optional[State] = Field(default=None)
+    country: str = Field(
+        ...
+    ) 
 
 class Person(BaseModel):
     first_name: str = Field(
@@ -45,6 +54,8 @@ class Person(BaseModel):
         gt=0,
         le=115
     )
+    email : EmailStr = Field(...)
+    website_Url : Optional[HttpUrl] = Field(default=None)
     hair_color: Optional[HairColor] = Field(default=None)
     is_married: Optional[bool] = Field(default=None)
 
