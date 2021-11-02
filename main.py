@@ -1,8 +1,6 @@
 #Python
-from os import stat
 from typing import Optional
 from enum import Enum
-from fastapi.datastructures import Default
 
 #Pydantic 
 from pydantic import BaseModel
@@ -11,7 +9,8 @@ from pydantic import EmailStr
 
 #FastAPI
 from fastapi import FastAPI
-from fastapi import status 
+from fastapi import status
+from fastapi import HTTPException  
 from fastapi import Body, Query, Path, Form, Header, Cookie, UploadFile, File
 
 app = FastAPI()
@@ -127,6 +126,8 @@ def show_person(
 
 #Validaciones: Path Parameters 
 
+persons = [1,2,3,4,5]
+
 @app.get("/person/detail/{person_id}")
 def show_person(
     person_id: int = Path(
@@ -137,6 +138,11 @@ def show_person(
         example=123
         )
 ):
+    if person_id not in persons:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="¡This person doesnt exist!"
+        )  
     return {person_id:"It Exists!"}
 
 #Validaciones: Request Body 
