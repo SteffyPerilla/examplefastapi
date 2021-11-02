@@ -67,7 +67,11 @@ class Person(BaseModel):
         default=None,
         example="False"
         )
-    password: str = Field(..., min_length=8)
+    password: str = Field(
+        ...,
+        min_length=8,
+        example="1234esdr"
+        )
 
     class Config:
         schema_extra ={
@@ -78,9 +82,42 @@ class Person(BaseModel):
                 "email": "steffy@gmail.com",
                 "website_Url" : "www.steffy.com",
                 "hair_color" : "blonde",
-                "is_married" : "True"
+                "is_married" : "True",
+                "password" : "1234qwer"
             }
         }
+
+class PersonOut(BaseModel):
+    first_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=50,
+        example="Cesar"
+        )   
+    last_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=50,
+        example="Galindo"
+        )
+    age: int = Field(
+        ...,
+        gt=0,
+        le=115,
+        example="29"
+        )
+    website_Url : Optional[HttpUrl] = Field(
+        default=None,
+        example="www.cesar.com"
+        )
+    hair_color: Optional[HairColor] = Field(
+        default=None,
+        example="black"
+        )
+    is_married: Optional[bool] = Field(
+        default=None,
+        example="False"
+        )
 
 @app.get("/")
 def home():
@@ -88,7 +125,7 @@ def home():
 
 # Request and response Body
 
-@app.post("/person/new")
+@app.post("/person/new", response_model=PersonOut)
 def create_person(person: Person = Body(...)):
     return person
 
