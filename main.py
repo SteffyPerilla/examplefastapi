@@ -36,7 +36,7 @@ class Location(BaseModel):
         ...
         ) 
 
-class Person(BaseModel):
+class PersonBase(BaseModel):
     first_name: str = Field(
         ...,
         min_length=1,
@@ -67,6 +67,8 @@ class Person(BaseModel):
         default=None,
         example="False"
         )
+
+class Person(PersonBase):
     password: str = Field(
         ...,
         min_length=8,
@@ -87,37 +89,8 @@ class Person(BaseModel):
             }
         }
 
-class PersonOut(BaseModel):
-    first_name: str = Field(
-        ...,
-        min_length=1,
-        max_length=50,
-        example="Cesar"
-        )   
-    last_name: str = Field(
-        ...,
-        min_length=1,
-        max_length=50,
-        example="Galindo"
-        )
-    age: int = Field(
-        ...,
-        gt=0,
-        le=115,
-        example="29"
-        )
-    website_Url : Optional[HttpUrl] = Field(
-        default=None,
-        example="www.cesar.com"
-        )
-    hair_color: Optional[HairColor] = Field(
-        default=None,
-        example="black"
-        )
-    is_married: Optional[bool] = Field(
-        default=None,
-        example="False"
-        )
+class PersonOut(PersonBase):
+    pass
 
 @app.get("/")
 def home():
