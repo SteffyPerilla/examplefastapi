@@ -1,16 +1,14 @@
 #Python
-from _typeshed import SupportsRDivMod
-from typing import Optional, get_type_hints
+from typing import Optional
 from enum import Enum
 
 #Pydantic 
 from pydantic import BaseModel
-from pydantic import Field, EmailStr, HttpUrl
+from pydantic import Field, HttpUrl
 
 #FastAPI
 from fastapi import FastAPI
 from fastapi import Body, Query, Path
-from pydantic.schema import field_schema 
 
 app = FastAPI()
 
@@ -32,11 +30,11 @@ class State(Enum):
 class Location(BaseModel):
     city: str = Field(
         ... 
-    )
+        )
     state: Optional[State] = Field(default=None)
     country: str = Field(
         ...
-    ) 
+        ) 
 
 class Person(BaseModel):
     first_name: str = Field(
@@ -44,22 +42,18 @@ class Person(BaseModel):
         min_length=1,
         max_length=50,
         example="Cesar"
-    )   
+        )   
     last_name: str = Field(
         ...,
         min_length=1,
         max_length=50,
         example="Galindo"
-    )
+        )
     age: int = Field(
         ...,
         gt=0,
         le=115,
         example="29"
-    )
-    email : EmailStr = Field(
-        ...,
-        example="cesar@gmail.com"
         )
     website_Url : Optional[HttpUrl] = Field(
         default=None,
@@ -73,6 +67,7 @@ class Person(BaseModel):
         default=None,
         example="False"
         )
+    password: str = Field(..., min_length=8)
 
     class Config:
         schema_extra ={
